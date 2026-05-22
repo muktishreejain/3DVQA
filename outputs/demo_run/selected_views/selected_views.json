@@ -1,0 +1,24 @@
+{
+  "selected_views": [
+    {
+      "view_id": "view_05",
+      "angle": "rear",
+      "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_05_rear.png"
+    },
+    {
+      "view_id": "view_01",
+      "angle": "+60",
+      "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_01_+60.png"
+    },
+    {
+      "view_id": "view_02",
+      "angle": "-60",
+      "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_02_-60.png"
+    }
+  ],
+  "rejected_views": [
+    "view_03",
+    "view_04",
+    "view_06"
+  ]
+}

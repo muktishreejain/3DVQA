@@ -1,0 +1,32 @@
+[
+  {
+    "label": "red cylinder",
+    "bbox": [
+      107,
+      92,
+      199,
+      176
+    ],
+    "confidence": 0.96
+  },
+  {
+    "label": "behind",
+    "bbox": [
+      175,
+      130,
+      267,
+      214
+    ],
+    "confidence": 0.84
+  },
+  {
+    "label": "object",
+    "bbox": [
+      244,
+      92,
+      336,
+      176
+    ],
+    "confidence": 0.8
+  }
+]

@@ -1,0 +1,27 @@
+2026-05-22 14:50:37 | INFO | 3dvqa | Stage START: detection
+2026-05-22 14:50:37 | WARNING | 3dvqa | [grounding_dino] Running in MOCK/heuristic mode: use_mock_models=true. Set use_mock_models=false and install checkpoints for full inference.
+2026-05-22 14:50:37 | INFO | 3dvqa | Stage END: detection (0.121s)
+2026-05-22 14:50:37 | INFO | 3dvqa | Stage START: segmentation
+2026-05-22 14:50:37 | WARNING | 3dvqa | [sam] Running in MOCK/heuristic mode: use_mock_models=true. Set use_mock_models=false and install checkpoints for full inference.
+2026-05-22 14:50:37 | INFO | 3dvqa | Stage END: segmentation (0.038s)
+2026-05-22 14:50:37 | INFO | 3dvqa | Stage START: depth
+2026-05-22 14:50:37 | WARNING | 3dvqa | [depthpro] Running in MOCK/heuristic mode: use_mock_models=true. Set use_mock_models=false and install checkpoints for full inference.
+2026-05-22 14:50:37 | INFO | 3dvqa | Stage END: depth (0.030s)
+2026-05-22 14:50:37 | INFO | 3dvqa | Stage START: views
+2026-05-22 14:50:37 | WARNING | 3dvqa | [zero123] Running in MOCK/heuristic mode: use_mock_models=true. Set use_mock_models=false and install checkpoints for full inference.
+2026-05-22 14:50:38 | INFO | 3dvqa | Stage END: views (0.553s)
+2026-05-22 14:50:38 | INFO | 3dvqa | Stage START: lifting
+2026-05-22 14:50:38 | WARNING | 3dvqa | [omni3d] Running in MOCK/heuristic mode: use_mock_models=true. Set use_mock_models=false and install checkpoints for full inference.
+2026-05-22 14:50:38 | INFO | 3dvqa | Stage END: lifting (0.199s)
+2026-05-22 14:50:38 | INFO | 3dvqa | Stage START: graphs
+2026-05-22 14:50:38 | INFO | 3dvqa | Stage END: graphs (0.109s)
+2026-05-22 14:50:38 | INFO | 3dvqa | Stage START: bgnn
+2026-05-22 14:50:38 | INFO | 3dvqa | Stage END: bgnn (0.156s)
+2026-05-22 14:50:38 | INFO | 3dvqa | Stage START: view_scores
+2026-05-22 14:50:39 | INFO | 3dvqa | Stage END: view_scores (0.385s)
+2026-05-22 14:50:39 | INFO | 3dvqa | Stage START: selected_views
+2026-05-22 14:50:39 | INFO | 3dvqa | Stage END: selected_views (0.247s)
+2026-05-22 14:50:39 | INFO | 3dvqa | Stage START: fusion
+2026-05-22 14:50:46 | INFO | 3dvqa | Stage END: fusion (7.314s)
+2026-05-22 14:50:46 | INFO | 3dvqa | Stage START: apc_vlm
+2026-05-22 14:50:46 | INFO | 3dvqa | Stage END: apc_vlm (0.002s)

@@ -1,0 +1,153 @@
+{
+  "modality": "3dvqa_structured",
+  "platform": "windows",
+  "visual_features_shape": [
+    512
+  ],
+  "graph_features_shape": [
+    128
+  ],
+  "text_features_shape": [
+    768
+  ],
+  "visual_features_sample": [
+    -0.009009973146021366,
+    0.018286654725670815,
+    -0.048660214990377426,
+    -0.012678456492722034,
+    0.01878669299185276,
+    -0.008526765741407871,
+    0.02438376098871231,
+    0.008238761685788631
+  ],
+  "graph_features_sample": [
+    0.08625718951225281,
+    0.09022999554872513,
+    -0.09668692946434021,
+    -0.057214271277189255,
+    -0.08721763640642166,
+    2.4415552616119385e-05,
+    -0.01503358781337738,
+    -0.029659708961844444
+  ],
+  "metadata": {
+    "question": "What is the color of the object behind the red cylinder?",
+    "query": {
+      "target": "red cylinder",
+      "relation": "behind",
+      "attribute": "color",
+      "raw_question": "What is the color of the object behind the red cylinder?"
+    },
+    "selected_views": [
+      {
+        "view_id": "view_05",
+        "angle": "rear",
+        "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_05_rear.png"
+      },
+      {
+        "view_id": "view_01",
+        "angle": "+60",
+        "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_01_+60.png"
+      },
+      {
+        "view_id": "view_02",
+        "angle": "-60",
+        "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_02_-60.png"
+      }
+    ],
+    "scene_graph": {
+      "nodes": [
+        {
+          "id": "n0",
+          "label": "red cylinder",
+          "position": [
+            -0.2012,
+            -0.151,
+            0.4589
+          ]
+        },
+        {
+          "id": "n1",
+          "label": "behind",
+          "position": [
+            -0.0684,
+            -0.0521,
+            0.0228
+          ]
+        },
+        {
+          "id": "n2",
+          "label": "object",
+          "position": [
+            0.0664,
+            -0.151,
+            0.0228
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": "n0",
+          "target": "n1",
+          "relation": "behind",
+          "confidence": 0.534
+        },
+        {
+          "source": "n0",
+          "target": "n1",
+          "relation": "left_of",
+          "confidence": 0.534
+        },
+        {
+          "source": "n0",
+          "target": "n2",
+          "relation": "behind",
+          "confidence": 0.5
+        },
+        {
+          "source": "n0",
+          "target": "n2",
+          "relation": "left_of",
+          "confidence": 0.5
+        },
+        {
+          "source": "n1",
+          "target": "n0",
+          "relation": "right_of",
+          "confidence": 0.534
+        },
+        {
+          "source": "n1",
+          "target": "n0",
+          "relation": "occluded_by",
+          "confidence": 0.534
+        },
+        {
+          "source": "n1",
+          "target": "n2",
+          "relation": "left_of",
+          "confidence": 0.833
+        },
+        {
+          "source": "n2",
+          "target": "n0",
+          "relation": "right_of",
+          "confidence": 0.5
+        },
+        {
+          "source": "n2",
+          "target": "n0",
+          "relation": "occluded_by",
+          "confidence": 0.5
+        },
+        {
+          "source": "n2",
+          "target": "n1",
+          "relation": "right_of",
+          "confidence": 0.833
+        }
+      ]
+    }
+  },
+  "cot_ready": true
+}

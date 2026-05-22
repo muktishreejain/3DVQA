@@ -1,0 +1,10 @@
+{
+  "depth_map": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\depth\\depth_gray.png",
+  "depth_heatmap": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\depth\\depth_heatmap.png",
+  "object_depths": {
+    "red cylinder": 0.466683566570282,
+    "behind": 0.030594736337661743,
+    "object": 0.030594736337661743
+  },
+  "backend": "depthpro"
+}

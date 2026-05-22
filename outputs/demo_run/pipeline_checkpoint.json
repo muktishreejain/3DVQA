@@ -1,0 +1,559 @@
+{
+  "completed_stages": [
+    "detection",
+    "segmentation",
+    "depth",
+    "views",
+    "lifting",
+    "graphs",
+    "bgnn",
+    "view_scores",
+    "selected_views",
+    "fusion",
+    "apc_vlm"
+  ],
+  "state": {
+    "image_path": "D:\\MUKTI\\3DVQA\\datasets\\demo\\test_scene.png",
+    "question": "What is the color of the object behind the red cylinder?",
+    "detections": [
+      {
+        "label": "red cylinder",
+        "bbox": [
+          107,
+          92,
+          199,
+          176
+        ],
+        "confidence": 0.96
+      },
+      {
+        "label": "behind",
+        "bbox": [
+          175,
+          130,
+          267,
+          214
+        ],
+        "confidence": 0.84
+      },
+      {
+        "label": "object",
+        "bbox": [
+          244,
+          92,
+          336,
+          176
+        ],
+        "confidence": 0.8
+      }
+    ],
+    "query": {
+      "target": "red cylinder",
+      "relation": "behind",
+      "attribute": "color",
+      "raw_question": "What is the color of the object behind the red cylinder?"
+    },
+    "detection_meta": {
+      "detections_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\detection\\detections.json",
+      "query_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\detection\\query.json",
+      "count": 3
+    },
+    "segmentation_meta": {
+      "segmentations_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\segmentation\\segmentations.json",
+      "masks": [
+        {
+          "label": "red cylinder",
+          "bbox": [
+            107,
+            92,
+            199,
+            176
+          ],
+          "visible_ratio": 0.164,
+          "mask_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\segmentation\\mask_00_red_cylinder.png"
+        },
+        {
+          "label": "behind",
+          "bbox": [
+            175,
+            130,
+            267,
+            214
+          ],
+          "visible_ratio": 0.164,
+          "mask_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\segmentation\\mask_01_behind.png"
+        },
+        {
+          "label": "object",
+          "bbox": [
+            244,
+            92,
+            336,
+            176
+          ],
+          "visible_ratio": 0.164,
+          "mask_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\segmentation\\mask_02_object.png"
+        }
+      ]
+    },
+    "object_depths": {
+      "red cylinder": 0.466683566570282,
+      "behind": 0.030594736337661743,
+      "object": 0.030594736337661743
+    },
+    "depth_meta": {
+      "depth_map": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\depth\\depth_gray.png",
+      "depth_heatmap": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\depth\\depth_heatmap.png",
+      "object_depths": {
+        "red cylinder": 0.466683566570282,
+        "behind": 0.030594736337661743,
+        "object": 0.030594736337661743
+      },
+      "backend": "depthpro"
+    },
+    "views_meta": {
+      "views": [
+        {
+          "view_id": "view_01",
+          "angle": "+60",
+          "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\zero123\\view_01_+60.png",
+          "visibility_score": 0.11077880859374437
+        },
+        {
+          "view_id": "view_02",
+          "angle": "-60",
+          "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\zero123\\view_02_-60.png",
+          "visibility_score": 0.11077880859374437
+        },
+        {
+          "view_id": "view_03",
+          "angle": "+120",
+          "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\zero123\\view_03_+120.png",
+          "visibility_score": 0.11077880859374437
+        },
+        {
+          "view_id": "view_04",
+          "angle": "-120",
+          "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\zero123\\view_04_-120.png",
+          "visibility_score": 0.11077880859374437
+        },
+        {
+          "view_id": "view_05",
+          "angle": "rear",
+          "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\zero123\\view_05_rear.png",
+          "visibility_score": 0.11077880859374437
+        },
+        {
+          "view_id": "view_06",
+          "angle": "top",
+          "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\zero123\\view_06_top.png",
+          "visibility_score": 0.11077880859374437
+        }
+      ]
+    },
+    "lifted_objects": [
+      {
+        "object": "red cylinder",
+        "position": [
+          -0.2012,
+          -0.151,
+          0.4589
+        ],
+        "orientation": [
+          0.1797,
+          0.2188,
+          0.5152
+        ],
+        "bbox_3d": [
+          [
+            -0.251171875,
+            -0.20104166666666667,
+            0.4088991427421569
+          ],
+          [
+            -0.151171875,
+            -0.10104166666666668,
+            0.5088991427421569
+          ]
+        ],
+        "pseudo_3d": true,
+        "point_cloud_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\lifting\\pc_00_red_cylinder.npy"
+      },
+      {
+        "object": "behind",
+        "position": [
+          -0.0684,
+          -0.0521,
+          0.0228
+        ],
+        "orientation": [
+          0.1797,
+          0.2188,
+          0.5152
+        ],
+        "bbox_3d": [
+          [
+            -0.118359375,
+            -0.10208333333333332,
+            -0.027189687490463372
+          ],
+          [
+            -0.018359374999999997,
+            -0.002083333333333312,
+            0.07281031250953664
+          ]
+        ],
+        "pseudo_3d": true,
+        "point_cloud_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\lifting\\pc_01_behind.npy"
+      },
+      {
+        "object": "object",
+        "position": [
+          0.0664,
+          -0.151,
+          0.0228
+        ],
+        "orientation": [
+          0.1797,
+          0.2188,
+          0.5152
+        ],
+        "bbox_3d": [
+          [
+            0.016406249999999997,
+            -0.20104166666666667,
+            -0.027189687490463372
+          ],
+          [
+            0.11640625,
+            -0.10104166666666668,
+            0.07281031250953664
+          ]
+        ],
+        "pseudo_3d": true,
+        "point_cloud_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\lifting\\pc_02_object.npy"
+      }
+    ],
+    "lifting_meta": {
+      "lifting_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\lifting\\lifting.json",
+      "objects": [
+        {
+          "object": "red cylinder",
+          "position": [
+            -0.2012,
+            -0.151,
+            0.4589
+          ],
+          "orientation": [
+            0.1797,
+            0.2188,
+            0.5152
+          ],
+          "bbox_3d": [
+            [
+              -0.251171875,
+              -0.20104166666666667,
+              0.4088991427421569
+            ],
+            [
+              -0.151171875,
+              -0.10104166666666668,
+              0.5088991427421569
+            ]
+          ],
+          "pseudo_3d": true,
+          "point_cloud_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\lifting\\pc_00_red_cylinder.npy"
+        },
+        {
+          "object": "behind",
+          "position": [
+            -0.0684,
+            -0.0521,
+            0.0228
+          ],
+          "orientation": [
+            0.1797,
+            0.2188,
+            0.5152
+          ],
+          "bbox_3d": [
+            [
+              -0.118359375,
+              -0.10208333333333332,
+              -0.027189687490463372
+            ],
+            [
+              -0.018359374999999997,
+              -0.002083333333333312,
+              0.07281031250953664
+            ]
+          ],
+          "pseudo_3d": true,
+          "point_cloud_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\lifting\\pc_01_behind.npy"
+        },
+        {
+          "object": "object",
+          "position": [
+            0.0664,
+            -0.151,
+            0.0228
+          ],
+          "orientation": [
+            0.1797,
+            0.2188,
+            0.5152
+          ],
+          "bbox_3d": [
+            [
+              0.016406249999999997,
+              -0.20104166666666667,
+              -0.027189687490463372
+            ],
+            [
+              0.11640625,
+              -0.10104166666666668,
+              0.07281031250953664
+            ]
+          ],
+          "pseudo_3d": true,
+          "point_cloud_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\lifting\\pc_02_object.npy"
+        }
+      ]
+    },
+    "scene_graph": {
+      "nodes": [
+        {
+          "id": "n0",
+          "label": "red cylinder",
+          "position": [
+            -0.2012,
+            -0.151,
+            0.4589
+          ]
+        },
+        {
+          "id": "n1",
+          "label": "behind",
+          "position": [
+            -0.0684,
+            -0.0521,
+            0.0228
+          ]
+        },
+        {
+          "id": "n2",
+          "label": "object",
+          "position": [
+            0.0664,
+            -0.151,
+            0.0228
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": "n0",
+          "target": "n1",
+          "relation": "behind",
+          "confidence": 0.534
+        },
+        {
+          "source": "n0",
+          "target": "n1",
+          "relation": "left_of",
+          "confidence": 0.534
+        },
+        {
+          "source": "n0",
+          "target": "n2",
+          "relation": "behind",
+          "confidence": 0.5
+        },
+        {
+          "source": "n0",
+          "target": "n2",
+          "relation": "left_of",
+          "confidence": 0.5
+        },
+        {
+          "source": "n1",
+          "target": "n0",
+          "relation": "right_of",
+          "confidence": 0.534
+        },
+        {
+          "source": "n1",
+          "target": "n0",
+          "relation": "occluded_by",
+          "confidence": 0.534
+        },
+        {
+          "source": "n1",
+          "target": "n2",
+          "relation": "left_of",
+          "confidence": 0.833
+        },
+        {
+          "source": "n2",
+          "target": "n0",
+          "relation": "right_of",
+          "confidence": 0.5
+        },
+        {
+          "source": "n2",
+          "target": "n0",
+          "relation": "occluded_by",
+          "confidence": 0.5
+        },
+        {
+          "source": "n2",
+          "target": "n1",
+          "relation": "right_of",
+          "confidence": 0.833
+        }
+      ]
+    },
+    "uncertainty_scores": [
+      [
+        0.6676012277603149,
+        0.6880184412002563,
+        0.6898327469825745
+      ],
+      [
+        0.6267704963684082,
+        0.6330682635307312,
+        0.6667842268943787
+      ],
+      [
+        0.6435025334358215,
+        0.6771208047866821,
+        0.6760454177856445
+      ]
+    ],
+    "bgnn_meta": {
+      "embeddings_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\bgnn\\updated_embeddings.npy",
+      "uncertainty_scores": [
+        [
+          0.6676012277603149,
+          0.6880184412002563,
+          0.6898327469825745
+        ],
+        [
+          0.6267704963684082,
+          0.6330682635307312,
+          0.6667842268943787
+        ],
+        [
+          0.6435025334358215,
+          0.6771208047866821,
+          0.6760454177856445
+        ]
+      ]
+    },
+    "ranked_scores": [
+      {
+        "view": "view_05",
+        "angle": "rear",
+        "R_v": 0.5984,
+        "U_v": 0.6632,
+        "score": -0.0648
+      },
+      {
+        "view": "view_01",
+        "angle": "+60",
+        "R_v": 0.5484,
+        "U_v": 0.6632,
+        "score": -0.1148
+      },
+      {
+        "view": "view_02",
+        "angle": "-60",
+        "R_v": 0.5484,
+        "U_v": 0.6632,
+        "score": -0.1148
+      },
+      {
+        "view": "view_06",
+        "angle": "top",
+        "R_v": 0.4984,
+        "U_v": 0.6632,
+        "score": -0.1648
+      },
+      {
+        "view": "view_03",
+        "angle": "+120",
+        "R_v": 0.4484,
+        "U_v": 0.6632,
+        "score": -0.2148
+      },
+      {
+        "view": "view_04",
+        "angle": "-120",
+        "R_v": 0.4484,
+        "U_v": 0.6632,
+        "score": -0.2148
+      }
+    ],
+    "selection": {
+      "selected_views": [
+        {
+          "view_id": "view_05",
+          "angle": "rear",
+          "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_05_rear.png"
+        },
+        {
+          "view_id": "view_01",
+          "angle": "+60",
+          "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_01_+60.png"
+        },
+        {
+          "view_id": "view_02",
+          "angle": "-60",
+          "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_02_-60.png"
+        }
+      ],
+      "rejected_views": [
+        "view_03",
+        "view_04",
+        "view_06"
+      ]
+    },
+    "fusion_export": {
+      "visual_features": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\fusion\\visual_features.npy",
+      "graph_features": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\fusion\\graph_features.npy",
+      "text_features": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\fusion\\text_features.npy",
+      "metadata": {
+        "question": "What is the color of the object behind the red cylinder?",
+        "query": {
+          "target": "red cylinder",
+          "relation": "behind",
+          "attribute": "color",
+          "raw_question": "What is the color of the object behind the red cylinder?"
+        },
+        "selected_views": [
+          {
+            "view_id": "view_05",
+            "angle": "rear",
+            "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_05_rear.png"
+          },
+          {
+            "view_id": "view_01",
+            "angle": "+60",
+            "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_01_+60.png"
+          },
+          {
+            "view_id": "view_02",
+            "angle": "-60",
+            "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_02_-60.png"
+          }
+        ],
+        "scene_graph_nodes": 3
+      }
+    },
+    "apc_vlm_result": {
+      "status": "packed",
+      "apc_input_bundle": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\apc_vlm\\apc_input_bundle.json",
+      "reasoning_output": null
+    }
+  }
+}

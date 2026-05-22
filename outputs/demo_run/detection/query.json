@@ -1,0 +1,6 @@
+{
+  "target": "red cylinder",
+  "relation": "behind",
+  "attribute": "color",
+  "raw_question": "What is the color of the object behind the red cylinder?"
+}

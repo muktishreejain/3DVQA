@@ -1,0 +1,35 @@
+[
+  {
+    "label": "red cylinder",
+    "bbox": [
+      107,
+      92,
+      199,
+      176
+    ],
+    "visible_ratio": 0.164,
+    "mask_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\segmentation\\mask_00_red_cylinder.png"
+  },
+  {
+    "label": "behind",
+    "bbox": [
+      175,
+      130,
+      267,
+      214
+    ],
+    "visible_ratio": 0.164,
+    "mask_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\segmentation\\mask_01_behind.png"
+  },
+  {
+    "label": "object",
+    "bbox": [
+      244,
+      92,
+      336,
+      176
+    ],
+    "visible_ratio": 0.164,
+    "mask_path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\segmentation\\mask_02_object.png"
+  }
+]

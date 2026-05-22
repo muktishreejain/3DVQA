@@ -1,0 +1,93 @@
+{
+  "nodes": [
+    {
+      "id": "n0",
+      "label": "red cylinder",
+      "position": [
+        -0.2012,
+        -0.151,
+        0.4589
+      ]
+    },
+    {
+      "id": "n1",
+      "label": "behind",
+      "position": [
+        -0.0684,
+        -0.0521,
+        0.0228
+      ]
+    },
+    {
+      "id": "n2",
+      "label": "object",
+      "position": [
+        0.0664,
+        -0.151,
+        0.0228
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "n0",
+      "target": "n1",
+      "relation": "behind",
+      "confidence": 0.534
+    },
+    {
+      "source": "n0",
+      "target": "n1",
+      "relation": "left_of",
+      "confidence": 0.534
+    },
+    {
+      "source": "n0",
+      "target": "n2",
+      "relation": "behind",
+      "confidence": 0.5
+    },
+    {
+      "source": "n0",
+      "target": "n2",
+      "relation": "left_of",
+      "confidence": 0.5
+    },
+    {
+      "source": "n1",
+      "target": "n0",
+      "relation": "right_of",
+      "confidence": 0.534
+    },
+    {
+      "source": "n1",
+      "target": "n0",
+      "relation": "occluded_by",
+      "confidence": 0.534
+    },
+    {
+      "source": "n1",
+      "target": "n2",
+      "relation": "left_of",
+      "confidence": 0.833
+    },
+    {
+      "source": "n2",
+      "target": "n0",
+      "relation": "right_of",
+      "confidence": 0.5
+    },
+    {
+      "source": "n2",
+      "target": "n0",
+      "relation": "occluded_by",
+      "confidence": 0.5
+    },
+    {
+      "source": "n2",
+      "target": "n1",
+      "relation": "right_of",
+      "confidence": 0.833
+    }
+  ]
+}

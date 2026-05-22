@@ -1,0 +1,32 @@
+{
+  "visual_features": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\fusion\\visual_features.npy",
+  "graph_features": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\fusion\\graph_features.npy",
+  "text_features": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\fusion\\text_features.npy",
+  "metadata": {
+    "question": "What is the color of the object behind the red cylinder?",
+    "query": {
+      "target": "red cylinder",
+      "relation": "behind",
+      "attribute": "color",
+      "raw_question": "What is the color of the object behind the red cylinder?"
+    },
+    "selected_views": [
+      {
+        "view_id": "view_05",
+        "angle": "rear",
+        "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_05_rear.png"
+      },
+      {
+        "view_id": "view_01",
+        "angle": "+60",
+        "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_01_+60.png"
+      },
+      {
+        "view_id": "view_02",
+        "angle": "-60",
+        "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\view_02_-60.png"
+      }
+    ],
+    "scene_graph_nodes": 3
+  }
+}

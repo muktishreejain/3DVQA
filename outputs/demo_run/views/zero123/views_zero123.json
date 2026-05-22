@@ -1,0 +1,38 @@
+[
+  {
+    "view_id": "view_01",
+    "angle": "+60",
+    "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\zero123\\view_01_+60.png",
+    "visibility_score": 0.11077880859374437
+  },
+  {
+    "view_id": "view_02",
+    "angle": "-60",
+    "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\zero123\\view_02_-60.png",
+    "visibility_score": 0.11077880859374437
+  },
+  {
+    "view_id": "view_03",
+    "angle": "+120",
+    "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\zero123\\view_03_+120.png",
+    "visibility_score": 0.11077880859374437
+  },
+  {
+    "view_id": "view_04",
+    "angle": "-120",
+    "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\zero123\\view_04_-120.png",
+    "visibility_score": 0.11077880859374437
+  },
+  {
+    "view_id": "view_05",
+    "angle": "rear",
+    "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\zero123\\view_05_rear.png",
+    "visibility_score": 0.11077880859374437
+  },
+  {
+    "view_id": "view_06",
+    "angle": "top",
+    "path": "D:\\MUKTI\\3DVQA\\outputs\\demo_run\\views\\zero123\\view_06_top.png",
+    "visibility_score": 0.11077880859374437
+  }
+]

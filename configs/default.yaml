@@ -1,0 +1,91 @@
+# Windows 11 + CUDA 11.8 + Python 3.10 + PyTorch 2.1.2
+seed: 42
+device: cuda
+dtype: float16
+debug: false
+use_mock_models: false
+
+paths:
+  checkpoints:
+    grounding_dino: models/checkpoints/grounding_dino
+    sam: models/checkpoints/sam
+    depthpro: models/checkpoints/depthpro
+    midas: models/checkpoints/midas
+    zero123: models/checkpoints/zero123
+    omni3d: models/checkpoints/omni3d
+    bgnn: models/checkpoints/bgnn
+    apc_vlm: models/checkpoints/apc_vlm
+
+detection:
+  box_threshold: 0.35
+  text_threshold: 0.25
+  max_detections: 10
+
+segmentation:
+  multimask_output: false
+
+depth:
+  backend: depthpro  # depthpro | midas
+  normalize: true
+  use_query_mask: true
+
+multiview:
+  viewpoints: ["+60", "-60", "+120", "-120", "rear", "top"]
+  image_size: 256
+
+lifting:
+  coordinate_frame: camera
+  lightweight: true
+
+graph:
+  relations:
+    - behind
+    - left_of
+    - right_of
+    - near
+    - overlap
+    - occluded_by
+  depth_threshold_near: 0.15
+  depth_threshold_behind: 0.08
+
+reasoning:
+  num_layers: 3
+  hidden_dim: 128
+  dropout: 0.1
+
+scoring:
+  visibility_weight: 0.6
+  relation_weight: 0.3
+  uncertainty_weight: 0.1
+
+selection:
+  top_k: 3
+
+fusion:
+  visual_dim: 512
+  graph_dim: 128
+  text_dim: 768
+
+apc_vlm:
+  enabled: true
+  run_reasoning: false
+
+pipeline:
+  stages:
+    - detection
+    - segmentation
+    - depth
+    - views
+    - lifting
+    - graphs
+    - bgnn
+    - view_scores
+    - selected_views
+    - fusion
+    - apc_vlm
+  save_intermediates: true
+  resume: true
+
+logging:
+  level: INFO
+  log_gpu_memory: true

@@ -1,0 +1,6 @@
+debug: true
+use_mock_models: true
+logging:
+  level: DEBUG
+selection:
+  top_k: 2
