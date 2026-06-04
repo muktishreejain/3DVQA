@@ -29,9 +29,9 @@ depth:
   normalize: true
   use_query_mask: true
 
+# Block 6: analytic virtual-camera reprojection (replaces Zero123 synthesis)
 multiview:
-  viewpoints: ["+60", "-60", "+120", "-120", "rear", "top"]
-  image_size: 256
+  n_virtual_cams: 12      # cameras placed around the scene centroid; ablate 8/12/16/24
 
 lifting:
   coordinate_frame: camera
@@ -40,23 +40,26 @@ lifting:
 graph:
   relations:
     - behind
+    - in_front_of
     - left_of
     - right_of
     - near
-    - overlap
+    - far
     - occluded_by
+    - overlap
   depth_threshold_near: 0.15
   depth_threshold_behind: 0.08
 
+# Block 5: Bayesian GNN (MC-Dropout epistemic + learned aleatoric)
 reasoning:
   num_layers: 3
   hidden_dim: 128
-  dropout: 0.1
+  dropout: 0.3            # higher dropout -> more informative MC variance
+  t_mc: 20               # Monte-Carlo dropout passes; ablate 10/20/50
 
+# Block 6 scoring: S(v) = IG(v) - lambda * U(v)
 scoring:
-  visibility_weight: 0.6
-  relation_weight: 0.3
-  uncertainty_weight: 0.1
+  lambda_uncertainty: 0.5  # uncertainty penalty weight; ablate 0/0.25/0.5/1.0
 
 selection:
   top_k: 3
@@ -71,18 +74,21 @@ apc_vlm:
   run_reasoning: false
 
 pipeline:
+  # Image-2 ordering: lift + graph + BGNN uncertainty BEFORE analytic
+  # reprojection, so view scoring can use per-node uncertainty.
   stages:
-    - detection
-    - segmentation
-    - depth
-    - views
-    - lifting
-    - graphs
-    - bgnn
-    - view_scores
-    - selected_views
-    - fusion
-    - apc_vlm
+    - detection        # 2 perception
+    - segmentation     # 2 perception
+    - depth            # 2 perception
+    - lifting          # 3 3D lifting
+    - graphs           # 4 scene graph
+    - bgnn             # 5 Bayesian GNN uncertainty
+    - views            # 6 analytic virtual-camera reprojection
+    - view_scores      # 6 IG - lambda * U scoring
+    - selected_views   # 6 top-k selection
+    - graph_cot        # 7 query-guided reasoning path
+    - fusion           # 8 feature export
+    - apc_vlm          # 8 VLM integration
   save_intermediates: true
   resume: true
 

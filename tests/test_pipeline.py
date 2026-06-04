@@ -55,6 +55,8 @@ def test_full_pipeline(config, sample_image, tmp_path):
     assert (out / "views" / "views.json").exists()
     assert (out / "graphs" / "scene_graph.json").exists()
     assert (out / "bgnn" / "bgnn.json").exists()
+    assert (out / "graph_cot" / "graph_cot.json").exists()
+    assert ctx.get("reasoning_path"), "Graph-CoT must produce a reasoning path"
     assert (out / "fusion" / "fusion_export.json").exists()
     assert (out / "apc_vlm" / "apc_vlm_integration.json").exists()
     assert ctx["query"]["attribute"] == "color"
@@ -86,6 +88,92 @@ def test_graph_relations():
     )
     assert len(g["nodes"]) == 2
     assert any(e["relation"] == "behind" for e in g["edges"])
+
+
+# ── Novel contribution tests ──────────────────────────────────────────
+
+
+def test_bgnn_per_node_uncertainty():
+    """Contribution 1: BGNN emits per-node p_exists/epistemic/aleatoric, and a
+    less-visible (occluded) node gets lower existence probability."""
+    from models.bgnn.model import BGNNModel
+
+    cfg = load_config()
+    cfg["use_mock_models"] = True
+    graph = {
+        "nodes": [
+            {"id": "n0", "label": "red cylinder", "position": [0.0, 0.0, 0.5], "visibility": 1.0},
+            {"id": "n1", "label": "green cube", "position": [0.05, 0.0, 0.7], "visibility": 0.3},
+        ],
+        "edges": [{"source": "n0", "target": "n1", "relation": "behind"}],
+    }
+    emb = np.zeros((2, 128), dtype=np.float32)
+    out = BGNNModel(cfg, device="cpu").run_inference(graph, emb)
+
+    nu = {u["id"]: u for u in out["node_uncertainty"]}
+    assert set(nu) == {"n0", "n1"}
+    for u in nu.values():
+        for k in ("p_exists", "epistemic", "aleatoric"):
+            assert 0.0 <= u[k] <= 1.0
+    # occluded node (lower visibility) has lower existence probability
+    assert nu["n1"]["p_exists"] < nu["n0"]["p_exists"]
+
+
+def test_analytic_reprojection(tmp_path):
+    """Contribution 2: reprojection produces virtual cameras + per-object
+    visibility in [0,1] and never synthesizes RGB images."""
+    from pipeline.multiview.stage import MultiviewStage
+
+    cfg = load_config()
+    cfg.setdefault("multiview", {})["n_virtual_cams"] = 8
+    ctx = {
+        "image": np.zeros((64, 64, 3), dtype=np.uint8),
+        "lifted_objects": [
+            {"object": "red cylinder", "position": [0.0, 0.0, 0.5], "size_3d": [0.1, 0.2, 0.1]},
+            {"object": "green cube", "position": [0.05, 0.0, 0.7], "size_3d": [0.1, 0.1, 0.1]},
+        ],
+    }
+    out = MultiviewStage(cfg).run(ctx, tmp_path)
+    views = out["views"]
+    assert len(views) == 8
+    for v in views:
+        assert "image" not in v  # analytic only — no synthesized RGB
+        assert "cam" in v and "per_obj_vis" in v
+        for vis in v["per_obj_vis"].values():
+            assert 0.0 <= vis <= 1.0
+
+
+def test_graph_cot_reasoning_path(tmp_path):
+    """Contribution 3: query-guided traversal yields a FIND/TRAVERSE/READ path
+    and an uncertainty-discounted confidence in [0,1]."""
+    from pipeline.graph_cot.stage import GraphCoTStage
+
+    cfg = load_config()
+    ctx = {
+        "image": np.zeros((64, 64, 3), dtype=np.uint8),
+        "query": {"target": "red cylinder", "relation": "behind", "attribute": "color"},
+        "scene_graph": {
+            "nodes": [
+                {"id": "n0", "label": "red cylinder", "position": [0.0, 0.0, 0.5],
+                 "p_exists": 0.98, "epistemic": 0.03, "aleatoric": 0.04},
+                {"id": "n1", "label": "green cube", "position": [0.05, 0.0, 0.7],
+                 "p_exists": 0.82, "epistemic": 0.15, "aleatoric": 0.11},
+            ],
+            "edges": [{"source": "n0", "target": "n1", "relation": "behind"}],
+        },
+        "selection": {"selected_views": [
+            {"view_id": "view_01", "per_obj_vis": {"n0": 0.4, "n1": 0.9}},
+        ]},
+    }
+    out = GraphCoTStage(cfg).run(ctx, tmp_path)
+    steps = [s["step"] for s in out["reasoning_path"]]
+    assert "FIND" in steps and "TRAVERSE" in steps and "READ" in steps
+    assert out["target_object"]["label"] == "green cube"
+    assert out["evidence_view_id"] == "view_01"
+    assert 0.0 <= out["graph_cot_confidence"] <= 1.0
+    # read the color attribute off the target
+    read = next(s for s in out["reasoning_path"] if s["step"] == "READ")
+    assert read["detail"] == "green"
 
 
 def test_midas_backend(sample_image, tmp_path):

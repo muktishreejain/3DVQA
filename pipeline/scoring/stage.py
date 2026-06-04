@@ -1,4 +1,10 @@
-"""Viewpoint relevance scoring: S_v = R_v - U_v."""
+"""Uncertainty-aware viewpoint scoring: S(v) = IG(v) - lambda * U(v).
+
+Consumes the analytic-reprojection views (per-object visibility) and the BGNN
+per-node uncertainty. Information gain rewards making query-relevant, likely-to-
+exist objects visible; the penalty discourages views dominated by uncertain
+objects.
+"""
 
 from __future__ import annotations
 
@@ -17,54 +23,81 @@ class ScoringStage(BaseStage):
 
     def run(self, context: Dict[str, Any], output_dir: Path) -> Dict[str, Any]:
         views = context.get("views", [])
-        graph = context.get("scene_graph", {})
-        uncertainty = np.array(context.get("uncertainty_scores", [[0.2]]))
         if not views:
             raise ValueError("views required for scoring")
-        cfg = self.config.get("scoring", {})
+
+        graph = context.get("scene_graph", {})
+        query = context.get("query", {})
+        lam = float(self.config.get("scoring", {}).get("lambda_uncertainty", 0.5))
+
+        unc_by_id, pexist_by_id = _node_uncertainty(context, graph)
+        anchor_ids, target_ids = _relevant_node_ids(query, graph)
+
         ranked = []
         for v in views:
-            r_v = _relational_visibility(v, graph, context.get("segmentations", []))
-            u_v = _viewpoint_ambiguity(v, uncertainty)
-            score = r_v - u_v
+            per_obj_vis = v.get("per_obj_vis", {})
+            ig = _information_gain(per_obj_vis, pexist_by_id, anchor_ids, target_ids)
+            u_v = _viewpoint_uncertainty(per_obj_vis, unc_by_id)
+            score = ig - lam * u_v
             ranked.append({
                 "view": v["view_id"],
                 "angle": v.get("angle"),
-                "R_v": round(r_v, 4),
-                "U_v": round(u_v, 4),
-                "score": round(score, 4),
+                "IG": round(float(ig), 4),
+                "U_v": round(float(u_v), 4),
+                "R_v": round(float(ig), 4),  # back-compat alias
+                "score": round(float(score), 4),
             })
+
         ranked.sort(key=lambda x: x["score"], reverse=True)
         save_json(ranked, output_dir / "view_scores.json")
         score_bar_chart(ranked, output_dir / "ranked_views.png")
-        _save_comparison_panel(views, ranked, output_dir / "score_overlay_panel.png")
         return {"ranked_scores": ranked}
 
 
-def _relational_visibility(view: Dict, graph: Dict, segs: List) -> float:
-    angle = view.get("angle", "")
-    edge_boost = min(len(graph.get("edges", [])) * 0.05, 0.3)
-    angle_boost = {"+60": 0.15, "-60": 0.15, "rear": 0.2, "top": 0.1}.get(angle, 0.05)
-    vis = np.mean([s.get("visible_ratio", 0.5) for s in segs]) if segs else 0.5
-    w = 0.6
-    return float(np.clip(w * vis + edge_boost + angle_boost, 0, 1))
+def _node_uncertainty(context: Dict, graph: Dict):
+    """Return {node_id: epistemic+aleatoric} and {node_id: p_exists}."""
+    unc, pexist = {}, {}
+    for u in context.get("node_uncertainty", []):
+        unc[u["id"]] = float(u.get("epistemic", 0.0)) + float(u.get("aleatoric", 0.0))
+        pexist[u["id"]] = float(u.get("p_exists", 1.0))
+    for node in graph.get("nodes", []):
+        nid = node["id"]
+        if nid not in unc and "epistemic" in node:
+            unc[nid] = float(node.get("epistemic", 0.0)) + float(node.get("aleatoric", 0.0))
+        pexist.setdefault(nid, float(node.get("p_exists", 1.0)))
+        unc.setdefault(nid, 0.2)
+    return unc, pexist
 
 
-def _viewpoint_ambiguity(view: Dict, uncertainty: np.ndarray) -> float:
-    if uncertainty.size == 0:
-        return 0.2
-    return float(np.mean(uncertainty))
+def _relevant_node_ids(query: Dict, graph: Dict):
+    """Identify anchor/target nodes by fuzzy label match against the query."""
+    nodes = graph.get("nodes", [])
+    anchor_text = (query.get("target") or "").lower()
+    anchor_ids = {n["id"] for n in nodes if anchor_text and anchor_text in n.get("label", "").lower()}
+    # targets = nodes reachable from the anchor via the query relation
+    relation = (query.get("relation") or "").replace(" ", "_")
+    target_ids = set()
+    if anchor_ids and relation:
+        for e in graph.get("edges", []):
+            if e.get("source") in anchor_ids and e.get("relation") == relation:
+                target_ids.add(e.get("target"))
+    return anchor_ids, target_ids
 
 
-def _save_comparison_panel(views: List, ranked: List, path: Path) -> None:
-    from utils.visualization import view_grid
+def _information_gain(per_obj_vis, pexist, anchor_ids, target_ids) -> float:
+    if not per_obj_vis:
+        return 0.0
+    total = 0.0
+    for nid, vis in per_obj_vis.items():
+        relevance = 1.0
+        if nid in target_ids:
+            relevance = 2.0
+        elif nid in anchor_ids:
+            relevance = 1.5
+        total += float(vis) * relevance * pexist.get(nid, 1.0)
+    return total / len(per_obj_vis)
 
-    order = {r["view"]: r["score"] for r in ranked}
-    imgs, labels = [], []
-    for v in views:
-        vid = v["view_id"]
-        if "image" in v:
-            imgs.append(v["image"])
-            labels.append(f"{vid} S={order.get(vid, 0):.2f}")
-    if imgs:
-        view_grid(imgs, labels, path)
+
+def _viewpoint_uncertainty(per_obj_vis, unc_by_id) -> float:
+    visible = [unc_by_id.get(nid, 0.2) for nid, vis in per_obj_vis.items() if vis > 0.1]
+    return float(np.mean(visible)) if visible else 1.0

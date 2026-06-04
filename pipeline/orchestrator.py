@@ -10,6 +10,7 @@ from pipeline.depth.stage import DepthStage
 from pipeline.detection.stage import DetectionStage
 from pipeline.fusion.stage import FusionStage
 from pipeline.graph.stage import GraphStage
+from pipeline.graph_cot.stage import GraphCoTStage
 from pipeline.lifting.stage import LiftingStage
 from pipeline.multiview.stage import MultiviewStage
 from pipeline.reasoning.stage import ReasoningStage
@@ -37,6 +38,7 @@ STAGE_REGISTRY = {
     "scoring": ScoringStage,
     "selected_views": SelectionStage,
     "selection": SelectionStage,
+    "graph_cot": GraphCoTStage,
     "fusion": FusionStage,
     "apc_vlm": APCVLMStage,
 }
@@ -115,18 +117,41 @@ class PipelineOrchestrator:
             if self.config.get("pipeline", {}).get("save_intermediates", True):
                 save_checkpoint(output_dir, completed, _serializable_state(context))
 
+        target = context.get("target_object") or {}
         summary = {
             "question": context.get("question"),
             "query": context.get("query"),
             "output_dir": str(output_dir),
+            "answer": target.get("label") if target else None,
+            "confidence": context.get("graph_cot_confidence"),
+            "reasoning_path": context.get("reasoning_path", []),
+            "evidence_view_id": context.get("evidence_view_id"),
+            "node_uncertainty": context.get("node_uncertainty", []),
             "fusion_export": context.get("fusion_export"),
             "selection": context.get("selection"),
             "apc_vlm_result": context.get("apc_vlm_result"),
             "num_detections": len(context.get("detections", [])),
         }
         save_json(summary, output_dir / "pipeline_summary.json")
+        _print_reasoning(context)
         log_gpu_memory("pipeline_complete", self.config.get("logging", {}).get("log_gpu_memory", True))
         return context
+
+
+def _print_reasoning(context: Dict[str, Any]) -> None:
+    path = context.get("reasoning_path")
+    if not path:
+        return
+    target = context.get("target_object") or {}
+    conf = context.get("graph_cot_confidence")
+    print("\n" + "=" * 50)
+    print(f"  Answer:     {(target.get('label') or 'unknown').upper()}")
+    if conf is not None:
+        print(f"  Confidence: {conf * 100:.0f}%")
+    print("  Reasoning Path:")
+    for step in path:
+        print(f"    [{step.get('step')}] {step.get('subject')} -> {step.get('detail')}")
+    print("=" * 50 + "\n")
 
 
 def _normalize_skip(skip_stages: Optional[List[str]]) -> Optional[List[str]]:

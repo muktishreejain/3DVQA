@@ -5,7 +5,6 @@ from typing import Any, Dict, List
 
 from utils.base_stage import BaseStage
 from utils.io import save_json
-from utils.visualization import view_grid
 
 
 class SelectionStage(BaseStage):
@@ -16,23 +15,24 @@ class SelectionStage(BaseStage):
         views = context.get("views", [])
         if not ranked:
             raise ValueError("ranked_scores required for selection")
+        score_map = {r["view"]: r for r in ranked}
         top_k = self.config.get("selection", {}).get("top_k", 3)
         selected_ids = [r["view"] for r in ranked[:top_k]]
         view_map = {v["view_id"]: v for v in views}
         selected = [view_map[vid] for vid in selected_ids if vid in view_map]
-        rejected = [v for v in views if v["view_id"] not in selected_ids]
         result = {
             "selected_views": [
-                {"view_id": v["view_id"], "angle": v.get("angle"), "path": v.get("path")}
+                {
+                    "view_id": v["view_id"],
+                    "angle": v.get("angle"),
+                    "azimuth_deg": v.get("azimuth_deg"),
+                    "score": score_map.get(v["view_id"], {}).get("score"),
+                    "per_obj_vis": v.get("per_obj_vis", {}),
+                    "cam": v.get("cam"),
+                }
                 for v in selected
             ],
-            "rejected_views": [v["view_id"] for v in rejected],
+            "rejected_views": [r["view"] for r in ranked[top_k:]],
         }
         save_json(result, output_dir / "selected_views.json")
-        if selected and rejected:
-            imgs = [v["image"] for v in selected[:3] if "image" in v]
-            lbls = [f"SEL {v['view_id']}" for v in selected[:3] if "image" in v]
-            rej_imgs = [v["image"] for v in rejected[:3] if "image" in v]
-            rej_lbls = [f"REJ {v['view_id']}" for v in rejected[:3] if "image" in v]
-            view_grid(imgs + rej_imgs, lbls + rej_lbls, output_dir / "selected_vs_rejected.png")
-        return {"selection": result}
+        return {"selection": result, "selected_views": result["selected_views"]}

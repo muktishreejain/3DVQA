@@ -50,10 +50,12 @@ class Omni3DModel(BaseModel):
                 "object": seg["label"],
                 "position": [round(cx, 4), round(cy, 4), round(float(z), 4)],
                 "orientation": orientation,
+                "size_3d": [round((x2 - x1) / w, 4), round((y2 - y1) / h, 4), 0.1],
                 "bbox_3d": [
                     [cx - 0.05, cy - 0.05, z - 0.05],
                     [cx + 0.05, cy + 0.05, z + 0.05],
                 ],
+                "visibility": round(float(seg.get("visible_ratio", 1.0)), 4),
                 "pseudo_3d": True,
             })
         return lifted
